@@ -1,17 +1,17 @@
 {{ $event['name'] }} / CONCEPT PRESS NOTE
-FICTIONAL EVENT — PORTFOLIO DEMONSTRATION
+CYCLING EVENT PORTFOLIO CONCEPT
 
-{{ $event['brand'] }} presents an imagined standalone athletics competition.
+{{ $event['brand'] }} presents an imagined multi-city road-cycling series.
 
-Illustrative date: {{ $event['date'] }}
-Fictional venue: {{ $event['venue'] }}
-Ambiguous location: {{ $event['location'] }}
+Calendar: {{ $event['date'] }}
+Host venues: {{ $event['venue'] }}
+Series setting: {{ $event['location'] }}
 {{ $event['venue_note'] }}
 
 {{ $event['description'] }}
 
 {{ $event['demo_notice'] }}
-No registration, ticketing, athlete commitment, sanctioning, sponsorship or venue relationship is represented.
+No registration, ticketing, rider commitment, sanctioning, sponsorship or venue relationship is represented.
 Site photography is AI-generated concept imagery, not documentary event coverage.
 
 Organizer: {{ $event['organizer'] }}

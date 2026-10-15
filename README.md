@@ -1,6 +1,6 @@
-# Track Meats / Balboa Classic
+# VELOMEATS
 
-One fictional athletics event, built as an editorial portfolio showcase. Laravel 12 and Blade render the site; Vite and Tailwind build the CSS and small vanilla-JavaScript interactions. GitHub Pages serves the static export. No database, accounts, payment flow or form backend.
+An editorial portfolio concept for a multi-city cycling series. Laravel 12 and Blade render the site; Vite and Tailwind build the CSS and small vanilla-JavaScript interactions. GitHub Pages serves the static export. No database, accounts, payment flow or form backend.
 
 ## Run locally
 
@@ -23,7 +23,7 @@ All event-specific data lives in **config/events.php**. Despite the existing fil
 | Intro | intro_heading, intro, demo_notice |
 | Timetables | schedule.amateur, schedule.elite, schedule_note |
 | All 12 information panels | information (paragraphs, facts, entries, lists, FAQs) |
-| Athletes, awards, travel, rules | information.runners / awards / stay / rules |
+| Riders, awards, travel, rules | information / awards / stay / rules |
 | Results | past_results |
 | Media and organizer | media, organizer, contact_email |
 | Real integrations | registration_url, tickets_url, watch_url, results_url, newsletter_url, socials |
@@ -41,7 +41,7 @@ Null registration/ticket URLs lead to an honest status section. Null social URLs
 - resources/views/events/press-note.blade.php — downloadable text, generated from the same event data.
 - resources/css/app.css — responsive visual system and reduced-motion treatment.
 - resources/js/app.js — menu, schedule/information tabs and legal deep links.
-- public/images/balboa/ — optimized concept photography; prompts in docs/imagery.md.
+- public/images/velo/ — dedicated cycling concept photography; prompts are documented in the task history.
 
 Tabs support arrow keys, Home and End, with one focusable active tab. Elite is the default schedule. On mobile the information selector scrolls horizontally; all 12 categories remain available. Legal footer links open their matching panel. Results and media use native expandable details.
 
@@ -50,14 +50,14 @@ Tabs support arrow keys, Home and End, with one focusable active tab. Elite is t
 ```text
 npm run build
 php artisan test
-php artisan site:export --base-path=trackmeats
-node scripts/check-static.mjs trackmeats
-node scripts/preview-static.mjs trackmeats
+php artisan site:export --base-path=velomeats
+node scripts/check-static.mjs velomeats
+node scripts/preview-static.mjs velomeats
 ```
 
-The export creates dist/index.html, compiled assets, local photographs, a generated downloads/press-note.txt, and .nojekyll. It rejects local development URLs and bypasses any running Vite development server.
+The export creates dist/index.html, compiled assets, local cycling photographs, a generated downloads/press-note.txt, and .nojekyll. It rejects local development URLs and bypasses any running Vite development server.
 
-The check script validates every internal asset, link target and controlled panel in the exported pages. The preview script serves the project-prefixed site at http://127.0.0.1:8001/trackmeats/ without Laravel. For a root-path export, omit the trackmeats argument from both scripts.
+The check script validates every internal asset, link target and controlled panel in the exported pages. The preview script serves the project-prefixed site at http://127.0.0.1:8001/veloseries/ without Laravel. For a root-path export, omit the veloseries argument from both scripts.
 
 Former event URLs are preserved as compatibility redirects to the one homepage: /balboa-classic, /icahn-memorial, /m10ke and /la-jolla-games. Laravel returns 301 responses; GitHub Pages gets small static redirect pages with visible fallback links. There are no other event pages or event-switching navigation.
 
@@ -65,8 +65,8 @@ For a root domain, omit --base-path and leave SITE_BASE_PATH empty. The existing
 
 ## Design and content provenance
 
-The compositional reference is Sound Running's Invite page: photographic hero, restrained overlay navigation, spacious editorial intro, black schedule, archive, media accordions and substantial footer. No reference photographs, branding or copy were reused.
+The design direction is contemporary European road cycling: photographic hero, restrained overlay navigation, spacious editorial intro, black race program, archive and substantial footer. No reference photographs, branding or copy were reused.
 
-The project retains the Balboa Classic identity and existing schedule entries, sorts the amateur timetable chronologically, and replaces the actual stadium association with a fictional setting. Other competition content is no longer published. Existing unused placeholder artwork and the old card component remain untouched.
+The calendar, host cities and course details are deliberately provisional. The cycling imagery is AI-generated concept work; no real riders, venues, sponsors or official results are represented. Existing unused placeholder artwork and the old card component remain untouched.
 
-The downloadable press note is deliberately labeled concept material. No actual event, sanctioning, athlete commitment, venue partnership or sponsor endorsement is represented.
+The downloadable press note is deliberately labeled concept material. No actual event, sanctioning, rider commitment, venue partnership or sponsor endorsement is represented.

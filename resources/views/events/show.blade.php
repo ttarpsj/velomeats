@@ -1,77 +1,127 @@
-{{-- The single-event page body. Content lives in config/events.php. --}}
 <section class="hero" aria-labelledby="event-title">
-    <img class="hero-photo" src="{{ site_url($event['hero_image']) }}" alt="{{ $event['hero_alt'] }}" width="1672" height="941" fetchpriority="high">
-    <div class="hero-shade" aria-hidden="true"></div>
-    <div class="hero-content shell">
-        <p class="eyebrow hero-kicker">track & field · Amateurs & Professionals</p>
-        <h1 id="event-title">@foreach ($event['name_lines'] as $line)<span>{{ $line }}</span>@endforeach</h1>
-        <div class="hero-meta"><p>{{ $event['date'] }}</p><span aria-hidden="true">/</span><p>{{ $event['venue'] }}</p></div>
-        <a class="hero-cta" href="#information">Find your place on the line <span aria-hidden="true">↗</span></a>
-    </div>
-    <div class="hero-bottom shell"><p>{{ $event['tagline'] }}</p><span>Fictional event · Demo edition</span><a href="#about" aria-label="Discover the meet">↓</a></div>
-</section>
-
-<section class="intro section-light" id="about" aria-labelledby="intro-title">
-    <div class="shell">
-        <div class="section-overline"><p class="eyebrow">01 / The meet</p><p class="eyebrow">{{ $event['date'] }} · Demonstration</p></div>
-        <h2 id="intro-title">@foreach ($event['intro_heading'] as $line)<span>{{ $line }}</span>@endforeach</h2>
-        <div class="intro-copy"><p class="intro-lead">{{ $event['description'] }}</p><div>@foreach ($event['intro'] as $paragraph)<p>{{ $paragraph }}</p>@endforeach</div></div>
-        <div class="action-strip"><a href="{{ $event['registration_url'] ?? '#entry' }}">Register <span>↗</span></a><a href="{{ $event['tickets_url'] ?? '#entry' }}">Watch <span>↗</span></a><a href="{{ $event['results_url'] ?? '#results' }}">Results <span>↗</span></a></div>
-        <p class="demo-note">{{ $event['demo_notice'] }}</p>
-    </div>
-</section>
-
-<section class="schedule section-dark" id="schedule" aria-labelledby="schedule-title">
-    <div class="shell schedule-layout">
-        <div class="section-heading"><p class="eyebrow">02 / On the clock</p><h2 id="schedule-title">One track.<br> All in.</h2><p>{{ $event['schedule_note'] }}</p><span class="vertical-caption">The competition schedule</span></div>
-        <div class="schedule-content" data-tabs>
-            <div class="schedule-tabs" role="tablist" aria-label="Competition schedule">
-                @foreach (['amateur' => 'Amateur', 'elite' => 'Elite'] as $division => $label)
-                    <button type="button" id="schedule-tab-{{ $division }}" role="tab" aria-selected="{{ $division === 'elite' ? 'true' : 'false' }}" aria-controls="schedule-{{ $division }}" tabindex="{{ $division === 'elite' ? '0' : '-1' }}">{{ $label }}</button>
-                @endforeach
-            </div>
-            @foreach ($event['schedule'] as $division => $races)
-                <div id="schedule-{{ $division }}" role="tabpanel" aria-labelledby="schedule-tab-{{ $division }}" tabindex="0" @if ($division !== 'elite') hidden @endif>
-                    <p class="session-label">{{ $event['sessions'][$division] }} <span>Demo timetable</span></p>
-                    <table class="timetable"><caption class="sr-only">{{ ucfirst($division) }} competition timetable — illustrative times</caption><thead><tr><th scope="col">Start</th><th scope="col">Discipline</th><th scope="col">Category / Round</th></tr></thead><tbody>
-                    @foreach ($races as $race)
-                        <tr><th scope="row" class="race-time">{{ $race['time'] }}</th><td class="race-name">{{ $race['event'] }}</td><td class="race-detail">{{ $race['division'] }}@if (!empty($race['heat']))<span>{{ $race['heat'] }}</span>@endif @if (!empty($race['note']))<small>{{ $race['note'] }}</small>@endif</td></tr>
-                    @endforeach
-                    </tbody></table>
-                </div>
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="{{ site_url($event['hero_image']) }}" aria-label="{{ $event['hero_alt'] }}"><source src="{{ site_url('mp4/12382125_1920_1080_25fps.mp4') }}" type="video/mp4"></video>
+    <div class="hero-wash" aria-hidden="true"></div>
+    <div class="hero-event">
+        <div class="hero-date"><strong>SEASON 01<br>2027</strong></div>
+        <div class="city-grid" role="group" aria-label="Season 01 host cities">
+            @foreach ($event['series_stops'] as $stop)
+                <button type="button" class="city-button" data-series-stop='@json($stop)' aria-pressed="{{ $loop->first ? 'true' : 'false' }}"><span>{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>{{ $stop['city'] }}</button>
             @endforeach
         </div>
+        <div class="event-actions" aria-label="Event actions"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M6 15l5-6 4 3 3-5"/></svg>Road race</span><a href="#calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v4m12-4v4M4 9h16M5 5h14v15H5z"/></svg>Add to calendar</a><a href="#share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l4 4-4 4m4-4H9M5 5v14h10"/></svg>Share</a></div>
+        <dl class="event-facts">
+            <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v4m10-4v4M4 9h16M5 5h14v15H5zM8 13h3m2 0h3"/></svg>Date</dt><dd data-stop-date>{{ $event['series_stops'][0]['date'] }}</dd></div>
+            <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>Location</dt><dd data-stop-location>{{ $event['series_stops'][0]['location'] }}</dd></div>
+            <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 7l8 6 8-6"/></svg>Contact</dt><dd><a href="mailto:hello@velomeats.com">hello@velomeats.com</a></dd></div>
+            <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V6l7-3 7 3v14M9 20v-6h6v6"/></svg>Field limit</dt><dd data-stop-field-limit>{{ $event['series_stops'][0]['field_limit'] }}</dd></div>
+            <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7Z"/></svg>Presented by</dt><dd>Velomeats</dd></div>
+            <div><dt><img src="{{ site_url('images/USA_Cycling_logo.svg') }}" alt="USA Cycling">Permit</dt><dd data-stop-permit>{{ $event['series_stops'][0]['permit'] }}</dd></div>
+        </dl>
+        <div class="event-map" data-event-map aria-label="{{ $event['series_stops'][0]['map_label'] }}">
+            <iframe data-map-frame title="{{ $event['series_stops'][0]['map_label'] }}" src="{{ $event['series_stops'][0]['map_url'] }}" loading="lazy"></iframe>
+        </div>
+    </div>
+    <div class="hero-copy" data-hero-intro>
+        <p class="kicker">VELOMEATS PRESENTS</p>
+        <h1 id="event-title">MAKE YOUR<br><em>MOVE.</em></h1>
+        <p class="hero-summary">A new road-racing series for the riders who turn every corner into a statement.</p>
+    </div>
+    <div class="race-flyer-panel" data-race-flyer aria-hidden="true">
+        <div class="race-flyer-card">
+            <div class="race-flyer-placeholder" data-flyer-placeholder aria-hidden="true"></div>
+            <iframe data-race-flyer-frame title="Race flyer" hidden loading="lazy"></iframe>
+            <button type="button" class="race-flyer-expand" data-flyer-expand aria-expanded="false" aria-label="Expand race flyer"></button>
+        </div>
+        <a class="registration-link" data-bikereg-link aria-disabled="true">BikeReg registration link</a>
+    </div>
+    <button type="button" class="race-flyer-backdrop" data-flyer-backdrop hidden aria-label="Close expanded race flyer"></button>
+</section>
+
+<section class="lineup" id="lineup" aria-labelledby="lineup-title">
+    <div class="lineup-heading"><p class="eyebrow">THE START LIST</p><h2 id="lineup-title" class="sr-only">The Start List media</h2></div>
+    <div class="media-grid" aria-label="Start List media">
+        @foreach (array_slice($event['gallery']['tiles'], 0, 6) as $tile)
+            @php($media = $tile['media'] ?? [])
+            <figure class="media-tile">
+                @if (!empty($media))
+                    <img src="{{ site_url($media[0]['path']) }}" alt="{{ $media[0]['alt'] ?? '' }}" loading="lazy">
+                @else
+                    <span aria-hidden="true"></span>
+                @endif
+            </figure>
+        @endforeach
     </div>
 </section>
 
-<figure class="race-image"><img src="{{ site_url($event['support_image']) }}" alt="{{ $event['support_alt'] }}" width="1672" height="941" loading="lazy"><figcaption><span>Every second has a story.</span><span>Concept imagery / AI-generated</span></figcaption></figure>
+<section class="program" id="program" aria-label="Race flyers">
+    <div class="flyer-carousel" data-flyer-carousel aria-roledescription="carousel">
+        <article class="flyer is-active" data-flyer-slide aria-roledescription="slide" aria-label="1 of 3">
+            <img src="{{ site_url($event['hero_image']) }}" alt="Cyclists racing through an urban circuit" loading="lazy">
+            <div class="flyer-overlay"><p>VELOMEATS / 01</p><h2>CHICAGO<br><em>CRIT.</em></h2><span>SEPT 14 · COURSE TBC</span></div>
+        </article>
+        <article class="flyer" data-flyer-slide aria-roledescription="slide" aria-label="2 of 3" hidden>
+            <img src="{{ site_url($event['support_image']) }}" alt="Cyclist sweeping through a road-race corner" loading="lazy">
+            <div class="flyer-overlay"><p>VELOMEATS / 02</p><h2>SAN DIEGO<br><em>ROAD.</em></h2><span>OCT 05 · COURSE TBC</span></div>
+        </article>
+        <article class="flyer" data-flyer-slide aria-roledescription="slide" aria-label="3 of 3" hidden>
+            <img src="{{ site_url($event['hero_image']) }}" alt="Peloton riding in formation" loading="lazy">
+            <div class="flyer-overlay"><p>VELOMEATS / 03</p><h2>SEATTLE<br><em>NIGHT.</em></h2><span>OCT 26 · COURSE TBC</span></div>
+        </article>
+        <div class="flyer-controls"><button type="button" data-flyer-previous aria-label="Previous race flyer">←</button><p data-flyer-status aria-live="polite">01 / 03</p><button type="button" data-flyer-next aria-label="Next race flyer">→</button></div>
+    </div>
+</section>
 
-<section class="information section-light" id="information" aria-labelledby="information-title">
-    <div class="shell">
-        <div class="section-overline"><p class="eyebrow">03 / Before the gun</p><p class="eyebrow">The details make the difference</p></div>
-        <h2 class="section-title" id="information-title">Know the meet.</h2>
-        <div class="information-layout" data-tabs data-information>
-            <div class="info-navigation" role="tablist" aria-label="Event information" aria-orientation="vertical">
-                @foreach ($event['information'] as $key => $info)
-                    <button type="button" id="info-tab-{{ $key }}" role="tab" aria-controls="info-{{ $key }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}" tabindex="{{ $loop->first ? '0' : '-1' }}"><span class="info-number">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span><span>{{ $info['label'] }}</span><span class="info-arrow" aria-hidden="true">↗</span></button>
-                @endforeach
-            </div>
-            <div class="info-panels">
-                @foreach ($event['information'] as $key => $info)
-                    <article id="info-{{ $key }}" role="tabpanel" aria-labelledby="info-tab-{{ $key }}" tabindex="0" @if (!$loop->first) hidden @endif>
-                        <p class="eyebrow">{{ $info['eyebrow'] }}</p><h3>{{ $info['title'] }}</h3>
-                        @foreach ($info['paragraphs'] ?? [] as $paragraph)<p>{{ $paragraph }}</p>@endforeach
-                        @if (!empty($info['facts']))<dl class="info-facts">@foreach ($info['facts'] as $label => $value)<div><dt>{{ $label }}</dt><dd>{{ $value }}</dd></div>@endforeach</dl>@endif
-                        @if (!empty($info['items']))<ol class="info-list">@foreach ($info['items'] as $item)<li>{{ $item }}</li>@endforeach</ol>@endif
-                        @if (!empty($info['entries']))<ul class="entry-list">@foreach ($info['entries'] as $entry)<li><strong>{{ $entry['name'] }}</strong><span>{{ $entry['discipline'] }}</span><small>{{ $entry['status'] }}</small></li>@endforeach</ul>@endif
-                        @foreach ($info['faqs'] ?? [] as $faq)<details class="faq"><summary>{{ $faq['question'] }}</summary><p>{{ $faq['answer'] }}</p></details>@endforeach
-                        @if (!empty($info['link']))<a class="text-link" href="{{ $info['link']['href'] }}">{{ $info['link']['label'] }} ↗</a>@endif
-                    </article>
+<section class="stories" id="stories" aria-labelledby="stories-title">
+    <div class="story-carousel" data-story-carousel aria-roledescription="carousel">
+        <div class="story-copy">
+            <p class="eyebrow">FROM THE ROAD</p>
+            <p class="story-count" data-story-status aria-live="polite">01 / 05</p>
+        </div>
+        <article class="story-slide is-active" data-story-slide aria-roledescription="slide" aria-label="1 of 5">
+            <h2 id="stories-title">AMERICAN CYCLING<br>IS <em>MOVING.</em></h2>
+            <div><p>More people are riding. More people are racing. More athletes are discovering endurance sport, buying bikes, joining clubs, and looking for somewhere to put that enthusiasm.</p><p>The opportunity is already here.</p><p>The challenge is making local racing feel like something people want to be part of.</p><p>Criteriums. Road races. Time trials. Community rides. They should be more than a date on a calendar and a registration link. They can become places people return to, communities rally around, and brands want to associate with.</p></div>
+        </article>
+        <article class="story-slide" data-story-slide aria-roledescription="slide" aria-label="2 of 5" aria-hidden="true">
+            <h2>MORE RACING<br>CREATES <em>MOMENTUM.</em></h2>
+            <div><p>American cycling has momentum. Brandon McNulty is wearing the rainbow jersey. Participation in endurance sport continues to introduce new athletes to cycling. And underneath the professional level sits an enormous pool of riders who need races to develop, compete, earn upgrade points, and move through the sport.</p><p>More racing creates more opportunity.</p><p>More riders create deeper fields.</p><p>Deeper fields create stronger competition.</p><p>And stronger events create something worth paying attention to.</p></div>
+        </article>
+        <article class="story-slide" data-story-slide aria-roledescription="slide" aria-label="3 of 5" aria-hidden="true">
+            <h2>THE PROBLEM<br>ISN'T THE <em>RACE.</em></h2>
+            <div><p>It's how the race is presented.</p><p>A great course can still disappear into the calendar.</p><p>A passionate organizing team can still struggle to reach beyond the riders who already know them.</p><p>A strong event can still look small to sponsors if the story around it feels small.</p><p>That is where we come in.</p></div>
+        </article>
+        <article class="story-slide" data-story-slide aria-roledescription="slide" aria-label="4 of 5" aria-hidden="true">
+            <h2>BUILD THE EVENT<br>BEYOND <em>RACE DAY.</em></h2>
+            <div><p>You handle the course, permits, volunteers, timing, safety, and everything that makes the event physically happen.</p><p>We build the world around it.</p><p>Creative direction. Identity. Campaigns. Digital presentation. Media. Advertising. Sponsor positioning. Community outreach.</p><p>Not for the sake of making the event look bigger than it is.</p><p>For the sake of showing people what it could become.</p><p>The goal is to create enough consistent attention that riders see a race worth entering, communities see something worth supporting, and brands see an opportunity to participate in experiences people will remember.</p></div>
+        </article>
+        <article class="story-slide" data-story-slide aria-roledescription="slide" aria-label="5 of 5" aria-hidden="true">
+            <h2>YOU RUN THE RACE.<br>WE MAKE IT <em>MATTER.</em></h2>
+            <div><p>Successful events don't need to begin with national sponsors or enormous budgets.</p><p>They need a reason for people nearby to care.</p><p>Build locally.</p><p>Make the experience good.</p><p>Tell the story properly.</p><p>Bring people back.</p><p>Then give larger partners something real to step into.</p><p>That is how an event stops surviving from year to year and starts building momentum of its own.</p><p>We help make sure people know why it matters.</p></div>
+        </article>
+        <div class="story-controls"><button type="button" data-story-previous aria-label="Previous story">← Previous</button><button type="button" data-story-next aria-label="Next story">Next →</button></div>
+    </div>
+</section>
+
+@if (!empty($event['gallery']))
+    <section class="visual-gallery" id="gallery" aria-labelledby="gallery-title">
+        <div class="visual-gallery-inner">
+            <p class="eyebrow">THE VISUAL ARCHIVE</p>
+            <h2 id="gallery-title">{{ $event['gallery']['title'] }}</h2>
+            <div class="visual-gallery-grid" aria-label="VeloMeats visual archive">
+                @foreach ($event['gallery']['tiles'] as $tile)
+                    @php($media = $tile['media'] ?? [])
+                    <figure class="visual-gallery-tile" data-gallery-tile>
+                        @forelse ($media as $item)
+                            <span class="visual-gallery-layer {{ $loop->first ? 'is-active' : '' }}">
+                                <img src="{{ site_url($item['path']) }}" alt="{{ $item['alt'] ?? '' }}" loading="lazy">
+                            </span>
+                        @empty
+                            @foreach ($event['gallery']['placeholder_colors'] as $color)
+                                <span class="visual-gallery-layer visual-gallery-placeholder {{ $loop->first ? 'is-active' : '' }}" style="background-color: {{ $color }}" aria-hidden="true"></span>
+                            @endforeach
+                        @endforelse
+                    </figure>
                 @endforeach
             </div>
         </div>
-        <div class="entry-status" id="entry"><div><p class="eyebrow">Your place on the line</p><h3>See you at the start.</h3></div><div><p>This is a fictional event showcase. Registration and ticket sales are not open.</p><div class="entry-actions">@if ($event['registration_url'])<a class="text-link" href="{{ $event['registration_url'] }}">Register ↗</a>@else<span>Registration · Not open</span>@endif @if ($event['tickets_url'])<a class="text-link" href="{{ $event['tickets_url'] }}">Watch ↗</a>@else<span>Watch · Not on sale</span>@endif</div></div></div>
-    </div>
-</section>
-
-<section class="results section-light" id="results" aria-labelledby="results-title"><div class="shell results-layout"><div><p class="eyebrow">04 / The archive</p><h2 class="section-title" id="results-title">Past the<br>finish line.</h2><p class="muted">Sample editions. Fictional performances.<br>No official records or verified results.</p></div><div class="archive">@foreach ($event['past_results'] as $edition)<details><summary><span class="archive-year">{{ $edition['year'] }}</span><span>{{ $edition['summary'] }}<small>Demo results</small></span><span class="plus" aria-hidden="true">+</span></summary><div class="archive-content"><p class="fine-print">Illustrative winners — all names and times are fictional.</p><table><caption class="sr-only">{{ $edition['year'] }} demonstration results</caption><thead><tr><th scope="col">Race</th><th scope="col">Athlete</th><th scope="col">Time</th></tr></thead><tbody>@foreach ($edition['rows'] as $result)<tr><th scope="row">{{ $result['race'] }}</th><td>{{ $result['athlete'] }}</td><td>{{ $result['time'] }}</td></tr>@endforeach</tbody></table></div></details>@endforeach</div></div></section>
+    </section>
+@endif
